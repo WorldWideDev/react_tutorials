@@ -3,7 +3,7 @@ import timezones from '../../data/timezones';
 import map from 'lodash/map';
 import classnames from 'classnames';
 import validateInput from '../../../server/shared/validations/signup';
-import TextFieldGroup from '../common/TextFieldGroup'
+import TextFieldGroup from '../common/TextFieldGroup';
 //import axios from 'axios';
 
 class SignupForm extends React.Component {
@@ -44,7 +44,12 @@ class SignupForm extends React.Component {
             this.setState({errors: {}, isLoading: true });
             // axios.post('/api/users', {user: this.state});
             this.props.userSignupRequest(this.state).then(
-                () => {},
+                // if no errors
+                () => {
+                    this.context.router.push('/');
+                },
+
+                // errors are present
                 ({data}) => this.setState({errors: data, isLoading: false})
             );
         }
@@ -72,7 +77,7 @@ class SignupForm extends React.Component {
                     label='Email'
                     onChange={this.onChange}
                     value={this.state.email}
-                    field='username'
+                    field='email'
                 />
 
                 <TextFieldGroup
@@ -80,7 +85,8 @@ class SignupForm extends React.Component {
                     label='Password'
                     onChange={this.onChange}
                     value={this.state.password}
-                    field='username'
+                    field='password'
+                    type='password'
                 />
 
                 <TextFieldGroup
@@ -88,15 +94,8 @@ class SignupForm extends React.Component {
                     label='Username'
                     onChange={this.onChange}
                     value={this.state.passwordConfirmation}
-                    field='username'
-                />
-
-                <TextFieldGroup
-                    error={errors.timezone}
-                    label='Username'
-                    onChange={this.onChange}
-                    value={this.state.timezone}
-                    field='username'
+                    field='passwordConfirmation'
+                    type='password'
                 />
 
                 <div className={classnames('form-group', {'has-error': errors.timezone})}>
@@ -125,6 +124,10 @@ class SignupForm extends React.Component {
 
 SignupForm.propTypes = {
     userSignupRequest: React.PropTypes.func.isRequired
+}
+
+SignupForm.contextTypes = {
+    router: React.PropTypes.object.isRequired
 }
 
 
