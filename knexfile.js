@@ -6,8 +6,8 @@ module.exports = {
       client: 'postgresql',
       connection: {
         database: 'reactauth',
-        user:     'cyberdev',
-        password: 'asdf'
+        user:     'grandma',
+        password: 'iloveyou'
       },
       pool: {
         min: 2,
