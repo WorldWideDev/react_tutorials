@@ -51,10 +51,8 @@ router.get('/:identifier', (req, res) => {
 // });
 
 router.post('/', (req, res) => {
-    console.log('in users post signup method');
     validateInput(req.body, commonValidations).then(({ errors, isValid }) => {
         if(isValid){
-            console.log('data is valid');
             const { username, password, timezone, email } = req.body;
             const password_digest = bcrypt.hashSync(password, 10);
 
