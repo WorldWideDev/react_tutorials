@@ -1,7 +1,6 @@
 import express from 'express';
 import commonValidations from '../shared/validations/signup';
 import bcrypt from 'bcrypt';
-import Promise from 'bluebird';
 import isEmpty from 'lodash/isEmpty'
 
 import User from '../models/user';
@@ -15,7 +14,6 @@ function validateInput(data, otherValidations){
         where: {email: data.email},
         orWhere: {username: data.username}
     }).fetch().then(user => {
-        console.log(user);
         if(user){
             if(user.get('username') === data.username){
                 errors.username = 'That username already exists';
@@ -31,9 +29,32 @@ function validateInput(data, otherValidations){
     })
 }
 
+router.get('/:identifier', (req, res) => {
+    User.query({
+        select: ['username', 'email'],
+        where: {email: req.params.identifier},
+        orWhere: {username: req.params.identifier}
+    }).fetch().then(user => {
+        console.log(user);
+        res.json({user});
+    });
+});
+//
+// router.get('/:identifier/:field', (req, res) => {
+//     let field = req.params.field;
+//   User.query({
+//     select: [ 'username', 'email', 'id' ],
+//     where: { field : req.params.identifier }
+//   }).fetch().then(user => {
+//     res.json({ user });
+//   });
+// });
+
 router.post('/', (req, res) => {
+    console.log('in users post signup method');
     validateInput(req.body, commonValidations).then(({ errors, isValid }) => {
         if(isValid){
+            console.log('data is valid');
             const { username, password, timezone, email } = req.body;
             const password_digest = bcrypt.hashSync(password, 10);
 
